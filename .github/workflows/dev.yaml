@@ -76,13 +76,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: "rastogiji/kubernetes-argo-demo-manifests"
-          ref: 'master'
           token: "${{ secrets.GH_ACCESS_TOKEN }}"
   
-      - name: Updating Image Tag
-        uses: everlytic/branch-merge@1.1.2
-        with: 
-          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
-          source_ref: 'dev'
-          target_branch: 'master'
-          commit_message_template: 'Dev merged to Master after Approval'
+      - name: Merging Dev and Master in Manifests Repo
+        run: |
+          git checkout master
+          git merge dev
+        
