@@ -48,6 +48,7 @@ jobs:
       - name: Push to repository
         uses: ad-m/github-push-action@master
         with:
+          repository: "rastogiji/kubernetes-argo-demo-manifests"
           github_token: "${{secrets.GH_ACCESS_TOKEN}}"
           branch: "master"
 
