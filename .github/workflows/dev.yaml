@@ -82,4 +82,5 @@ jobs:
         run: |
           git checkout master
           git merge dev
+          git push --set-upstream origin master
         
