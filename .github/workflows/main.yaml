@@ -15,14 +15,14 @@ jobs:
         uses: "google-github-actions/auth@v0"
         with:
           credentials_json: "{{ secrets.ACTIONS_SA_KEY }}"
-
+        #Setup gcloud CLI
       - name: Build and Push Image using Cloud Build
         uses: google-github-actions/setup-gcloud@v0
       
       - name: Configure GCP Project
-        run: gcloud config set project "$PROJECT_ID" 
+        run: gcloud config set project ${{ env.PROJECT_ID }} 
         
         #Building and Pushing Container Image using gcloud.
       - name: Build Docker Image using Cloud Build
-        run : gcloud builds submit --tag asia-south1-docker.pkg.dev/"$PROJECT_ID"/first-repository/app-image:${{ github.sha }} .
+        run : gcloud builds submit --tag asia-south1-docker.pkg.dev/${{ env.PROJECT_ID }}/first-repository/app-image:${{ github.sha }} .
           
