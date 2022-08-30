@@ -28,12 +28,16 @@ jobs:
       - name: Build Docker Image using Cloud Build
         run : gcloud builds submit --tag asia-south1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
         
-      - name: Checkout Manifests Repo and Updating Image Tag
+      - name: Checkout Manifests Repo
         uses: actions/checkout@v3
         with:
           repository: "https://github.com/rastogiji/kubernetes-argo-demo-manifests.git"
           ref: 'master'
+
+      - name: Updating Image Tag
         run: |
+          pwd
+          ls
           cd prod-files/
           sed -i 's|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ github.sha }}|' prod-deployment.yaml
           git config user.name  github_actions
