@@ -1,0 +1,21 @@
+name: CI Pipeline
+on:
+  push:
+    branches: [master]
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Code
+        uses: actions/checkout@v3
+
+      - name: Build and Push Docker Image
+        uses: RafikFarhad/push-to-gcr-github-action@v4.1
+        with:
+          gcloud_servicd_key:  "{{ secrets.ACTIONS_SA_KEY }}"
+          registry: asia-south1-docker.pkg.dev
+          project_id: searce-cloud-consultants
+          image_name: first-repository/app-image
+          image_tag: ${{ github.sha }}
+          dockerfile: .
+          context: .
