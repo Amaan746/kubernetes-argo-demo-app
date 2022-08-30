@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Manifests Repo
         uses: actions/checkout@v3
         with:
-          repository: "https://github.com/rastogiji/kubernetes-argo-demo-manifests.git"
+          repository: "rastogiji/kubernetes-argo-demo-manifests"
           ref: 'master'
 
       - name: Updating Image Tag
