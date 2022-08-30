@@ -8,7 +8,7 @@ app.get("/", (req, res)=>{
     res.send("<h1>Hello from Node App v1</h1>");
 });
 
-// Listening to requests on PORT
+// Listening to requests on PORT 8080
 app.listen(port, (err)=>{
     if(err){
         console.log(err)
