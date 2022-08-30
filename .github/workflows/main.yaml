@@ -33,7 +33,7 @@ jobs:
         with:
           repository: "rastogiji/kubernetes-argo-demo-manifests"
           ref: 'master'
-          token: "${{ GH_ACCESS_TOKEN }}"
+          token: "${{ secrets.GH_ACCESS_TOKEN }}"
 
       - name: Updating Image Tag
         run: |
