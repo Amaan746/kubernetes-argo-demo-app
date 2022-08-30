@@ -54,14 +54,14 @@ jobs:
           echo "${{ secrets.GH_ACCESS_TOKEN }}"
           git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
           
-  merge-to-master-branch:
+  merge-to-master-branch-and-deploy-to-prod:
     runs-on: ubuntu-latest
     needs: build-container
     environment: 
       name: prod
       url: https://github.com
     steps:
-      - name: Checkout Manifests Repo
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
       - name: Merging Dev Branch with master
@@ -71,3 +71,23 @@ jobs:
           source_ref: 'dev'
           target_branch: 'master'
           commit_message_template: 'Dev merged to Master after Approval'
+      
+      - name: Checkout Manifests Repo
+        uses: actions/checkout@v3
+        with:
+          repository: "rastogiji/kubernetes-argo-demo-manifests"
+          ref: 'master'
+          token: "${{ secrets.GH_ACCESS_TOKEN }}"
+  
+      - name: Updating Image Tag
+        run: |
+          pwd
+          ls
+          cd prod-files/
+          sed -i 's|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ github.sha }}|' prod-deployment.yaml
+          git config user.name  github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "Updating Image Tag"
+          echo "${{ secrets.GH_ACCESS_TOKEN }}"
+          git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
