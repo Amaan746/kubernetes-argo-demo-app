@@ -33,6 +33,7 @@ jobs:
         with:
           repository: "rastogiji/kubernetes-argo-demo-manifests"
           ref: 'master'
+          token: "${{ GH_ACCESS_TOKEN }}"
 
       - name: Updating Image Tag
         run: |
@@ -44,6 +45,7 @@ jobs:
           git config user.email github-actions[bot]@users.noreply.github.com
           git add .
           git commit -m "Updating Image Tag"
+          echo "${{ secrets.GH_ACCESS_TOKEN }}"
           git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
       
 
