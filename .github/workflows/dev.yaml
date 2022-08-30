@@ -1,0 +1,63 @@
+name: Dev CI Pipeline
+on:
+  push:
+    branches: [dev]
+    paths-ignore:
+      - ".github/**"
+env:
+  PROJECT_ID: searce-cloud-consultants
+  REPO_NAME: first-repository
+  IMAGE_NAME: app-image
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Code
+        uses: actions/checkout@v3
+        with:
+          ref: 'dev'
+
+      - name: Configure Authentication with GCP
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ secrets.ACTIONS_SA_KEY }}"
+        
+        #Setup gcloud CLI
+      - name: Build and Push Image using Cloud Build
+        uses: google-github-actions/setup-gcloud@v0
+      
+      - name: Configure GCP Project
+        run: gcloud config set project ${{ env.PROJECT_ID }} 
+        
+        #Building and Pushing Container Image using gcloud.
+      - name: Build Docker Image using Cloud Build
+        run : gcloud builds submit --tag asia-south1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+        
+      - name: Checkout Manifests Repo
+        uses: actions/checkout@v3
+        with:
+          repository: "rastogiji/kubernetes-argo-demo-manifests"
+          ref: 'dev'
+          token: "${{ secrets.GH_ACCESS_TOKEN }}"
+
+          
+      - name: Updating Image Tag
+        run: |
+          pwd
+          ls
+          cd dev-files/
+          sed -i 's|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ github.sha }}|' dev-deployment.yaml
+          git config user.name  github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git checkout dev
+          git add .
+          git commit -m "Updating Image Tag"
+          echo "${{ secrets.GH_ACCESS_TOKEN }}"
+          git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
+    
+  merge-to-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 
+
+          
