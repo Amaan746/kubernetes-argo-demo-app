@@ -80,7 +80,8 @@ jobs:
   
       - name: Merging Dev and Master in Manifests Repo
         run: |
+          git checkout dev
           git checkout master
           git merge dev -m "Merging Dev with Master"
-          git push git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git --set-upstream origin master
+          git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git --set-upstream origin master
         
