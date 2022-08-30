@@ -54,10 +54,4 @@ jobs:
           git commit -m "Updating Image Tag"
           echo "${{ secrets.GH_ACCESS_TOKEN }}"
           git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
-    
-  merge-to-production:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 
-
           
