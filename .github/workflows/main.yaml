@@ -4,6 +4,8 @@ on:
     branches: [master]
 env:
   PROJECT_ID: searce-cloud-consultants
+  REPO_NAME: first-repository
+  IMAGE_NAME: app-image
 jobs:
   build-container:
     runs-on: ubuntu-latest
@@ -24,5 +26,20 @@ jobs:
         
         #Building and Pushing Container Image using gcloud.
       - name: Build Docker Image using Cloud Build
-        run : gcloud builds submit --tag asia-south1-docker.pkg.dev/${{ env.PROJECT_ID }}/first-repository/app-image:${{ github.sha }} .
+        run : gcloud builds submit --tag asia-south1-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+        
+      - name: Checkout Manifests Repo and Updating Image Tag
+        uses: actions/checkout@v3
+        with:
+          repository: "https://github.com/rastogiji/kubernetes-argo-demo-manifests.git"
+          ref: 'master'
+        run: |
+          cd prod-files/
+          sed -i 's|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ github.sha }}|' prod-deployment.yaml
+          git config user.name  github_actions
+          git config user.email animesh.rastogicloud@gmail.com
+          git add .
+          git commit -m "Updating Image Tag"
+          git push
+
           
