@@ -21,7 +21,8 @@ jobs:
       
       - name: Configure GCP Project
         run: gcloud config set project "$PROJECT_ID" 
-
+        
+        #Building and Pushing Container Image using gcloud.
       - name: Build Docker Image using Cloud Build
         run : gcloud builds submit --tag asia-south1-docker.pkg.dev/"$PROJECT_ID"/first-repository/app-image:${{ github.sha }} .
           
