@@ -78,10 +78,17 @@ jobs:
           repository: "rastogiji/kubernetes-argo-demo-manifests"
           token: "${{ secrets.GH_ACCESS_TOKEN }}"
   
-      - name: Merging Dev and Master in Manifests Repo
+      - name: Updating Image Tag in the Master Branch
         run: |
-          git checkout dev
+          pwd
+          ls
+          cd prod-files/
+          sed -i 's|${{ env.IMAGE_NAME }}:.*|${{ env.IMAGE_NAME }}:${{ github.sha }}|' prod-deployment.yaml
+          git config user.name  github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
           git checkout master
-          git merge dev -m "Merging Dev with Master"
-          git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git --set-upstream origin master
+          git add .
+          git commit -m "Updating Image Tag"
+          echo "${{ secrets.GH_ACCESS_TOKEN }}"
+          git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
         
