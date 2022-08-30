@@ -11,9 +11,6 @@ env:
 jobs:
   build-container:
     runs-on: ubuntu-latest
-    environment:
-      name: prod
-      url: https://github.com
     steps:
       - name: Checkout the Code
         uses: actions/checkout@v3

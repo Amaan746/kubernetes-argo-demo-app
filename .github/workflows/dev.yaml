@@ -39,7 +39,6 @@ jobs:
           repository: "rastogiji/kubernetes-argo-demo-manifests"
           ref: 'dev'
           token: "${{ secrets.GH_ACCESS_TOKEN }}"
-
           
       - name: Updating Image Tag
         run: |
@@ -55,3 +54,20 @@ jobs:
           echo "${{ secrets.GH_ACCESS_TOKEN }}"
           git push https://${{ secrets.GH_ACCESS_TOKEN }}@github.com/rastogiji/kubernetes-argo-demo-manifests.git
           
+  merge-to-master-branch:
+    runs-on: ubuntu-latest
+    needs: build-container
+    environment: 
+      name: prod
+      url: https://github.com
+    steps:
+      - name: Checkout Manifests Repo
+        uses: actions/checkout@v3
+
+      - name: Merging Dev Branch with master
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ secrets.GH_ACCESS_TOKEN }}
+          source_ref: 'dev'
+          target_branch: 'master'
+          commit_message_template: 'Dev merged to Master after Approval'
